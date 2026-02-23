@@ -1,0 +1,93 @@
+experiment_dir: "results/SERUM_sd14"
+
+# Dataset configuration
+dataset:
+  name: "Gustavosta/Stable-Diffusion-Prompts"
+  train_split: 40000
+  batch_size: 32
+  img_start: 0
+  img_end: -1
+  
+  paths:
+    generated_data_file: "data_sd14_gen.pt"
+    augmented_data_file: "data_sd14_aug.pt"
+    data_dir: "./datasets"
+
+# Diffusion Model configuration
+diffusion:
+  stable_diffusion_model_id: "CompVis/stable-diffusion-v1-4"
+  torch_dtype: "float16"
+  device: "cuda"
+
+  # Sampling configuration
+  sampling:
+    default_steps: 50
+    cfg_scale: 7.5
+
+# Default shapes
+shapes:
+  image_size: 512
+  latent_channels: 4
+  latent_height: 64
+  latent_width: 64
+
+# Watermark model configuration
+watermark:
+  grid:
+    noise_mix_alpha: 0.5
+    clamp_std_multiplier: 4
+    norm_win_size: 64
+    norm_stride: 1
+
+  buffer:
+    size: 15000
+
+  model_dir: "models"
+  score_model_file: "score_model.pt"
+  watermark_file: "watermark.pt"
+
+# Training configuration 
+training:
+  train_batch_size: 32
+  watermark_batch_size: 32
+  aug_batch_size: 4
+  aug_temp: 1
+  
+  epochs: 50
+  full_eval_interval: -1
+
+  checkpoint_dir: "checkpoints"
+  random_seed: 42
+
+  optimizer: 'Adam'
+  optimizer_score_model_args:
+    lr: 0.001
+    betas: [0.9, 0.999]
+
+  scheduler: 'ReduceLROnPlateau'
+  scheduler_args:
+    factor: 0.2
+    patience: 2
+
+  visualization:
+    batch_size: 16
+    log_interval: 500
+    image_cnt: 4
+
+evaluation:
+  quick_samples: 20
+  num_samples: 5000
+  fid_num_samples: 10000
+
+  batch_size: 32
+  target_fpr: 0.01
+  size: [512, 512]
+  random_seed: 42
+
+  original_path: "gen_images/original"
+  clean_path: "gen_images/clean"
+  watermarked_path: "gen_images/watermarked"
+  positive_prompts_path: "gen_images/positive_prompts.txt"
+  negative_prompts_path: "gen_images/negative_prompts.txt"
+  augmented_path: "gen_images/augmented"
+  eval_output_path: "evaluation"

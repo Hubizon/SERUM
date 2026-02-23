@@ -1,0 +1,10 @@
+**/__pycache__
+**/.idea
+**/.venv
+results/
+datasets/
+COCO/
+
+*.pt
+*.log
+*.pyc
